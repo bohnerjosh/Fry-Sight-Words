@@ -72,7 +72,7 @@ Want to learn more about what Joshua Bohner does with any information we collect
 
   
 
-[1\. INFORMATION COLLECTION](#information-collection)
+[1\. INFORMATION COLLECTION](#1.\-information-collection)
 
 [2\. HOW DO WE PROCESS YOUR INFORMATION?](#infouse)
 
@@ -100,8 +100,7 @@ Want to learn more about what Joshua Bohner does with any information we collect
 
   
 
-**1\.** 
-### **INFORMATION COLLECTION**
+### **1\. INFORMATION COLLECTION**
 
   
 
