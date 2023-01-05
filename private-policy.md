@@ -137,12 +137,7 @@ All personal information that you provide to us must be true, complete, and accu
   
 
 **_In Short:_** _We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. We may also process your information for other purposes with your consent._
-
-  
-
-**We process your personal information for a variety of reasons, depending on how you interact with our Services, including:**
-
-  
+ 
 
 ### **3\. WHAT LEGAL BASES DO WE RELY ON TO PROCESS YOUR INFORMATION?**<a id="legalbases"></a>
 
@@ -195,6 +190,8 @@ In some exceptional cases, we may be legally permitted under applicable law to p
   
 
 We may need to share your personal information in the following situations:
+  * Compliace with law(s)
+  
 
 *   **Business Transfers.** We may share or transfer your information in connection with, or during negotiations of, any merger, sale of company assets, financing, or acquisition of all or a portion of our business to another company.
 
