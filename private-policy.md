@@ -62,7 +62,7 @@ This privacy notice for Joshua Bohner ("**Company**," "**we**," "**us**," or "**
 
   
 
-Want to learn more about what Joshua Bohner does with any information we collect? Click [here](#toc) to review the notice in full.
+Want to learn more about what Joshua Bohner does with any information we collect? Click [here](#table-of-contents) to review the notice in full.
 
   
 
@@ -132,7 +132,7 @@ All personal information that you provide to us must be true, complete, and accu
 
   
 
-#infouse **2\. HOW DO WE PROCESS YOUR INFORMATION?**
+### **2\. HOW DO WE PROCESS YOUR INFORMATION?**<a id="infouse"></a>
 
   
 
@@ -144,7 +144,7 @@ All personal information that you provide to us must be true, complete, and accu
 
   
 
-#legalbases **3\. WHAT LEGAL BASES DO WE RELY ON TO PROCESS YOUR INFORMATION?**
+### **3\. WHAT LEGAL BASES DO WE RELY ON TO PROCESS YOUR INFORMATION?**<a id="legalbases"></a>
 
   
 
@@ -186,7 +186,7 @@ In some exceptional cases, we may be legally permitted under applicable law to p
 
   
 
-#whoshare **4\. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?**
+### **4\. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?**<a id="whoshare"></a>
 
   
 
@@ -200,7 +200,7 @@ We may need to share your personal information in the following situations:
 
   
 
-#inforetain **5\. HOW LONG DO WE KEEP YOUR INFORMATION?**
+### **5\. HOW LONG DO WE KEEP YOUR INFORMATION?** <a id="inforetain"></a>
 
   
 
@@ -216,7 +216,7 @@ When we have no ongoing legitimate business need to process your personal inform
 
   
 
-#infosafe **6\. HOW DO WE KEEP YOUR INFORMATION SAFE?**
+### **6\. HOW DO WE KEEP YOUR INFORMATION SAFE?** <a id="infosafe"></a>
 
   
 
@@ -228,7 +228,7 @@ We have implemented appropriate and reasonable technical and organizational secu
 
   
 
-#privacyrights **7\. WHAT ARE YOUR PRIVACY RIGHTS?**
+### **7\. WHAT ARE YOUR PRIVACY RIGHTS?** <a id="privacyrights"></a>
 
   
 
@@ -262,7 +262,7 @@ If you have questions or comments about your privacy rights, you may email us at
 
   
 
-#DNT **8\. CONTROLS FOR DO-NOT-TRACK FEATURES**
+### **8\. CONTROLS FOR DO-NOT-TRACK FEATURES** <a id="DNT"></a>
 
   
 
@@ -270,7 +270,7 @@ Most web browsers and some mobile operating systems and mobile applications incl
 
   
 
-#caresidents **9\. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?**
+### **9\. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?**<a id="caresidents"></a>
 
   
 
@@ -452,7 +452,7 @@ To exercise these rights, you can contact us by email at BohnerJosh2022@gmail.c
 
   
 
-#policyupdates **10\. DO WE MAKE UPDATES TO THIS NOTICE?**
+### **10\. DO WE MAKE UPDATES TO THIS NOTICE?** <a id="policyupdates"></a>
 
   
 
@@ -464,7 +464,7 @@ We may update this privacy notice from time to time. The updated version will be
 
   
 
-#contact **11\. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?**
+### **11\. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?** <a id="contact"></a>****
 
   
 
@@ -482,7 +482,7 @@ United States
 
   
 
-#request **12\. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?**
+### **12\. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?** <a id="request"></a>
 
   
 
