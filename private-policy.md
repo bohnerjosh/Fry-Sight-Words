@@ -100,7 +100,7 @@ Want to learn more about what Joshua Bohner does with any information we collect
 
   
 
-### **1\. WHAT INFORMATION DO WE COLLECT?** {#infocollect}
+### **1\. WHAT INFORMATION DO WE COLLECT\? {#infocollect} **
 
   
 
