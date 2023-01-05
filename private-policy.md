@@ -100,7 +100,8 @@ Want to learn more about what Joshua Bohner does with any information we collect
 
   
 
-**1\.** ### **INFORMATION COLLECTION**
+**1\.** 
+### **INFORMATION COLLECTION**
 
   
 
