@@ -68,7 +68,7 @@ Want to learn more about what Joshua Bohner does with any information we collect
 
   
 
-**TABLE OF CONTENTS**
+#toc **TABLE OF CONTENTS**
 
   
 
@@ -100,7 +100,7 @@ Want to learn more about what Joshua Bohner does with any information we collect
 
   
 
-**1\. WHAT INFORMATION DO WE COLLECT?**
+#infocollect **1\. WHAT INFORMATION DO WE COLLECT?**
 
   
 
@@ -132,7 +132,7 @@ All personal information that you provide to us must be true, complete, and accu
 
   
 
-**2\. HOW DO WE PROCESS YOUR INFORMATION?**
+#infouse **2\. HOW DO WE PROCESS YOUR INFORMATION?**
 
   
 
@@ -144,7 +144,7 @@ All personal information that you provide to us must be true, complete, and accu
 
   
 
-**3\. WHAT LEGAL BASES DO WE RELY ON TO PROCESS YOUR INFORMATION?**
+#legalbases **3\. WHAT LEGAL BASES DO WE RELY ON TO PROCESS YOUR INFORMATION?**
 
   
 
@@ -186,7 +186,7 @@ In some exceptional cases, we may be legally permitted under applicable law to p
 
   
 
-**4\. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?**
+#whoshare **4\. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?**
 
   
 
@@ -200,7 +200,7 @@ We may need to share your personal information in the following situations:
 
   
 
-**5\. HOW LONG DO WE KEEP YOUR INFORMATION?**
+#inforetain **5\. HOW LONG DO WE KEEP YOUR INFORMATION?**
 
   
 
@@ -216,7 +216,7 @@ When we have no ongoing legitimate business need to process your personal inform
 
   
 
-**6\. HOW DO WE KEEP YOUR INFORMATION SAFE?**
+#infosafe **6\. HOW DO WE KEEP YOUR INFORMATION SAFE?**
 
   
 
@@ -228,7 +228,7 @@ We have implemented appropriate and reasonable technical and organizational secu
 
   
 
-**7\. WHAT ARE YOUR PRIVACY RIGHTS?**
+#privacyrights **7\. WHAT ARE YOUR PRIVACY RIGHTS?**
 
   
 
@@ -262,7 +262,7 @@ If you have questions or comments about your privacy rights, you may email us at
 
   
 
-**8\. CONTROLS FOR DO-NOT-TRACK FEATURES**
+#DNT **8\. CONTROLS FOR DO-NOT-TRACK FEATURES**
 
   
 
@@ -270,7 +270,7 @@ Most web browsers and some mobile operating systems and mobile applications incl
 
   
 
-**9\. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?**
+#caresidents **9\. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?**
 
   
 
@@ -452,7 +452,7 @@ To exercise these rights, you can contact us by email at BohnerJosh2022@gmail.c
 
   
 
-**10\. DO WE MAKE UPDATES TO THIS NOTICE?**
+#policyupdates **10\. DO WE MAKE UPDATES TO THIS NOTICE?**
 
   
 
@@ -464,7 +464,7 @@ We may update this privacy notice from time to time. The updated version will be
 
   
 
-**11\. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?**
+#contact **11\. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?**
 
   
 
@@ -482,11 +482,9 @@ United States
 
   
 
-**12\. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?**
+#request **12\. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?**
 
   
 
 You have the right to request access to the personal information we collect from you, change that information, or delete it. To request to review, update, or delete your personal information, please submit a request form by clicking [here](https://app.termly.io/notify/9f4976cb-9380-4cfc-ab6f-15713fae1dad).
 
-
-This privacy policy was created using Termly's [Privacy Policy Generator](https://termly.io/products/privacy-policy-generator/).
