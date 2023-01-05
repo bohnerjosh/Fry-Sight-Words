@@ -26,7 +26,7 @@ This privacy notice for Joshua Bohner ("**Company**," "**we**," "**us**," or "**
 
   
 
-**_This summary provides key points from our privacy notice, but you can find out more details about any of these topics by clicking the link following each key point or by using our table of contents below to find the section you are looking for. You can also click_** [**_here_**](#toc) **_to go directly to our table of contents._**
+**_This summary provides key points from our privacy notice, but you can find out more details about any of these topics by clicking the link following each key point or by using our table of contents below to find the section you are looking for. You can also click_** [**_here_**](#table-of-contents) **_to go directly to our table of contents._**
 
   
 
@@ -68,7 +68,7 @@ Want to learn more about what Joshua Bohner does with any information we collect
 
   
 
-#toc **TABLE OF CONTENTS**
+###**TABLE OF CONTENTS**
 
   
 
