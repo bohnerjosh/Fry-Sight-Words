@@ -1,0 +1,30 @@
+{
+  "cli": {
+    "version": ">= 3.1.1"
+  },
+  "build": {
+    "development": {
+      "distribution": "internal",
+      "autoIncrement": true
+    },
+    "preview": {
+      "distribution": "internal",
+      "autoIncrement": true
+    },
+    "production": {
+      "autoIncrement": true
+    }
+  },
+  "submit": {
+    "preview": {
+      "android": {
+        "releaseStatus": "draft"
+      }
+    },
+    "production": {
+      "android": {
+        "releaseStatus": "draft"
+      }
+   }
+  }
+}

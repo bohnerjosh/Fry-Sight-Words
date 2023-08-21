@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "frywords",
+    "slug": "frywords",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/complete-img.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/complete-img.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bohnjos.frywords",
+      "buildNumber": "6"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/foreground.png",
+        "backgroundImage": "./assets/background.png"
+      },
+      "package": "com.bohnjos.frywords",
+      "versionCode": 12
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b74375f9-e281-46cd-8c8e-bbffc4462942"
+      }
+    }
+  }
+}
