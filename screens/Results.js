@@ -46,8 +46,8 @@ export default class Results extends Component {
     }
 
     async switchMainScreen() {
-        //this.props.navigation.navigate("Main");
-        this.saveToFile("JoshuaResults");
+        this.props.navigation.navigate("Main");
+        //this.saveToFile("JoshuaResults");
     }
 
     // make output data human readable
@@ -150,12 +150,14 @@ export default class Results extends Component {
                         </View>
                     </View>
                     <View>
+                    {/*}
                         <TouchableOpacity 
                             style={styles.saveTouchable}
                             onPress={this.toggleSaveModalVisible}
                         >
                             <Text style={styles.saveText}>Save Results</Text>
                         </TouchableOpacity>
+        */}
                         <TouchableOpacity 
                             style={styles.finishTouchable}
                             onPress={this.switchMainScreen}
@@ -250,7 +252,7 @@ const styles = StyleSheet.create({
         width: 150,
         borderRadius: 20,
         backgroundColor: "black",
-        margin: 10, 
+        margin: 35, 
     },
     text: {
         color: "black",

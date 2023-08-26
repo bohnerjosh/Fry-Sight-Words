@@ -28,7 +28,7 @@
         "backgroundImage": "./assets/background.png"
       },
       "package": "com.bohnjos.frywords",
-      "versionCode": 12
+      "versionCode": 15
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -37,6 +37,21 @@
       "eas": {
         "projectId": "b74375f9-e281-46cd-8c8e-bbffc4462942"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "34.0.0"
+          },
+          "ios": {
+            "deploymentTarget": "13.0"
+          }
+        }
+      ]
+    ]
   }
 }

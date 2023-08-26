@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as Speech from "expo-speech";
-import * as Random from "expo-random";
+import * as Crypto from 'expo-crypto';
 
 import {
     StyleSheet, 
@@ -82,13 +82,13 @@ export default class Game extends Component {
     }
 
     getRandomChoice(lst, mod) {
-        return lst[Random.getRandomBytes(1)[0] % mod];
+        return lst[Crypto.getRandomBytes(1)[0] % mod];
     }
 
-    getWords() {
+    getIncorrectWords(solution_word) {
         var word1 = "";
         var word2 = "";
-        while (word1 == word2) {
+        while (word1 == word2 || (word1 == solution_word || word2 == solution_word)) {
             word1 = this.getRandomChoice(this.state.ReserveList, WORD_COUNT);
             word2 = this.getRandomChoice(this.state.ReserveList, WORD_COUNT);
         }
@@ -124,8 +124,9 @@ export default class Game extends Component {
     }
 
     async createWordArray() {
-        const wrongWords = this.getWords();
-        const wordArr = [await this.getSolutionWord(), wrongWords[0], wrongWords[1]];
+        const answer = await this.getSolutionWord();
+        const wrongWords = this.getIncorrectWords(answer);
+        const wordArr = [answer, wrongWords[0], wrongWords[1]];
         const shuffledArray = this.shuffleArray(wordArr);
         return shuffledArray
     } 
