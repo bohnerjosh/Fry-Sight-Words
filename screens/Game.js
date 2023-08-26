@@ -53,6 +53,7 @@ export default class Game extends Component {
         this.switchToResults = this.switchToResults.bind(this);
         correct_words = [];
         incorrect_words = [];
+
     }
 
     async componentDidMount() {
@@ -316,7 +317,7 @@ const styles = StyleSheet.create({
         margin: 15,
     },
     counterView: {
-        top: 30,
+        top: 35, 
         position: "absolute",
         alignSelf: "center",
     },

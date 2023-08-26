@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         flex: 1, 
     },
     titleView: {
-        top: 30,
+        top: 35,
         position: "absolute",
         alignSelf: "center",
     },

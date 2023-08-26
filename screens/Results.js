@@ -14,7 +14,11 @@ import {
     TextInput,
 } from "react-native";
 
-const DEFAULT_MIME_TYPE = "text/plain";
+// file types
+const DEFAULT_MIME_TYPE = "text/plain"; // for android
+const UTI = "public.text"; // for IOS
+
+const FILE_WARNING_MSG = "Filename cannot be blank";
 
 export default class Results extends Component {
     constructor(props) {
@@ -26,6 +30,7 @@ export default class Results extends Component {
         this.convertResults = this.convertResults.bind(this);
         this.toggleSaveModalVisible = this.toggleSaveModalVisible.bind(this);
         this.updateText = this.updateText.bind(this);
+        this.saveToFile = this.saveToFile.bind(this);
         this.baseUri = FileSystem.documentDirectory;
         this.state = {
             saveModalVisible: false,
@@ -102,10 +107,14 @@ export default class Results extends Component {
             }
         }
         else {
-            await FileSystem.StorageAccessFramework.createFileAsync(FileSystem.documentDirectory, this.state.fileName, DEFAULT_MIME_TYPE).then(async (uri) => {
-                await FileSystem.writeAsStringAsync(uri, fileData);
-            }).then(() => {
-                shareAsync(uri)
+            const fileUri = FileSystem.documentDirectory + this.state.fileName + ".txt";
+
+            await FileSystem.writeAsStringAsync(fileUri, fileData);
+
+            await shareAsync(fileUri, {UTI}).catch((error) => {
+                console.log(error);
+            }).finally(() => {
+                this.toggleSaveModalVisible();
             })
         }
     }
@@ -133,7 +142,7 @@ export default class Results extends Component {
 
         return (
             <View style={styles.container}>
-                <View style={styles.titleView}>
+                <View>
                     <Text style={styles.resultTitle}>All done!</Text>
                 </View>
                 <ScrollView style={styles.scroller}>
@@ -149,15 +158,15 @@ export default class Results extends Component {
                             { incorrectTextComponents }
                         </View>
                     </View>
-                    <View>
-                    {/*}
+                    <View style={styles.resultsView}>
+                    
                         <TouchableOpacity 
                             style={styles.saveTouchable}
                             onPress={this.toggleSaveModalVisible}
                         >
                             <Text style={styles.saveText}>Save Results</Text>
                         </TouchableOpacity>
-        */}
+        
                         <TouchableOpacity 
                             style={styles.finishTouchable}
                             onPress={this.switchMainScreen}
@@ -189,12 +198,12 @@ export default class Results extends Component {
                         </View>
                         <TouchableOpacity 
                             style={styles.saveTouchable}
-                            onPress={this.switchMainScreen}
+                            onPress={this.saveToFile}
                         >
                             <Text style={styles.saveText}>Save</Text>
                         </TouchableOpacity>
                         <Text style={styles.warningText}>
-                            {this.state.showWarningText && "Warning!"}
+                            {this.state.showWarningText && FILE_WARNING_MSG}
                         </Text>
                     </View>
                 </Modal>
@@ -207,17 +216,22 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: "center",
         alignItems: "center",
+        marginTop: 35,
     },
     inputView: {
-        marginTop: 10,
+        // default: 15
+        marginTop: 15,
+    },
+    resultsView: {
+        justifyContent: "center",
+        alignItems: "center",
+        flex: 1,
     },
     modalView: {
         justifyContent: "center",
         alignItems: "center",
         flex: 1,
-    },
-    titleView: {
-        margin: 20,
+        marginTop: 50,
     },
     results: {
         justifyContent: "center",
@@ -242,7 +256,6 @@ const styles = StyleSheet.create({
         width: 150,
         borderRadius: 20,
         backgroundColor: "black",
-        margin: 10,
         marginTop: 20,
     },
     finishTouchable: {
@@ -252,7 +265,7 @@ const styles = StyleSheet.create({
         width: 150,
         borderRadius: 20,
         backgroundColor: "black",
-        margin: 35, 
+        marginTop: 20
     },
     text: {
         color: "black",

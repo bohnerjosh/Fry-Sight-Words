@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Button, Text, TextInput, View, TouchableOpacity, }
+import { LogBox }
   from 'react-native'
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -7,6 +7,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MainScreen from "./screens/Main";
 import Game from "./screens/Game";
 import Results from "./screens/Results";
+
+// TEMPORARY: Prevents NativeEventEmmiter from throwing warnings
+LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const Stack = createNativeStackNavigator();
 
