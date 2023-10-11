@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect, onRef } from 'react';
 import * as Speech from "expo-speech";
 import * as Crypto from 'expo-crypto';
 
@@ -10,301 +10,199 @@ import {
     TouchableOpacity,
 } from "react-native";
 
-import ChoiceBtn from "../components/ChoiceBtn";
-const resultScreenName = "Results"
+// default consts
+const DEFAULT_WORD_OPTIONS = ["", "", ""];
+const DEFAULT_BUTTON_STATES = [0, 0, 0]; // 0 for normal, 1 for correct, 2 for incorrect
+const RESULTS_SCREEN_NAME = "Results";
+const DEFAULT_CHOICE_COUNT = 3; 
 
+// store user performance data for display in results
+var correctWords = [];
+var incorrectWords = [];
 
-//var tmpLst = ["go", "had", "will", "which"];
-var SPEECH_RATE;
-var wordSet = [];
+const Game = ({navigation, route}) => {
 
-const WORD_COUNT = 100;
-var tempProps;
-var correct_words;
-var incorrect_words;
+    // extract params
+    const SPEECH_RATE = route.params.SPEECH_RATE;
+    const wordSet = route.params.wordSet;
 
-export default class Game extends Component {
-    constructor(props) {
-        super(props);
-        const route_params = this.props.route.params;
-        SPEECH_RATE = route_params.SPEECH_RATE;
-        wordSet = route_params.wordSet;
-        this.state = {
-            currentWord: "",
-            Option1: "",
-            Option2: "",
-            Option3: "",
-            btn1State: 0,
-            btn2State: 0,
-            btn3State: 0,
-            ReserveList: wordSet,
-            activeList: wordSet,
-            //activeList: tmpLst,
-            activeListLength: wordSet.length,
-            //activeListLength: tmpLst.length,
-            showNext: false,
-            correct: null,
-            wordsRemaining: 100,
-        }
-        this.speak = this.speak.bind(this);
-        this.refresh = this.refresh.bind(this);
-        this.compareChoice = this.compareChoice.bind(this);
-        this.assignButtons = this.assignButtons.bind(this);
-        this.switchToResults = this.switchToResults.bind(this);
-        correct_words = [];
-        incorrect_words = [];
+    // initialize wordset
+    const initWordSetLength = wordSet.length;
+    var wordPool = wordSet;
 
+    // State variables
+    const [wordPoolListLength, setWordPoolListLength] = useState(initWordSetLength);
+    const [wordOptions, setWordOptions] = useState(DEFAULT_WORD_OPTIONS);
+    const [choiceButtonStates, setChoiceButtonStates] = useState([...DEFAULT_BUTTON_STATES]);
+    const [showResults, setShowResults] = useState(false); // for toggling "well Done!" or "Incorrect!" text
+    const [userAnsweredCorrectly, setUserAnsweredCorrectly] = useState(false); // determines whether to show "Well Done!" or "Incorrect!"
+    const [solutionWordIndex, setSolutionWordIndex] = useState(-1);
+
+    // reset user performance and set word choices for first render
+    useEffect(() => {
+        correctWords = [];
+        incorrectWords = [];
+        createWordChoices();
+    }, []);
+
+    // change state back to default: clear button colors, next buttons are hidden, create new word choices
+    const reset = () => {
+        setChoiceButtonStates(DEFAULT_BUTTON_STATES);
+        if (userAnsweredCorrectly) setUserAnsweredCorrectly(!userAnsweredCorrectly);
+        setShowResults(false);
+        createWordChoices();
     }
 
-    async componentDidMount() {
-        await this.assignButtons();
-        await this.childStateChange();
-        tempProps = this.props;
-    }
-
-    // updates the render of the child objects
-    async childStateChange() {
-        await this.btn1.handleStateChange();
-        await this.btn2.handleStateChange();
-        await this.btn3.handleStateChange();
-    }
-
-    switchToResults() {
-        tempProps = "";
-        this.props.navigation.navigate(resultScreenName, 
+    const switchToResults = () => {
+        navigation.navigate(RESULTS_SCREEN_NAME, 
             {
-                incorrect: incorrect_words,
-                correct: correct_words,
+                incorrect: incorrectWords,
+                correct: correctWords,
             });
     }
 
-    speak() {
-        Speech.speak(this.state.currentWord, {rate: SPEECH_RATE});
+    // use TTS to have user audibly hear what word they should press
+    const speak = () => {
+        Speech.speak(wordOptions[solutionWordIndex], {rate: SPEECH_RATE});
     }
 
-    getRandomChoice(lst, mod) {
+    // given a list and index terminator, get a random element from that list
+    const getRandomChoice = (lst, mod) => {
         return lst[Crypto.getRandomBytes(1)[0] % mod];
     }
 
-    getIncorrectWords(solution_word) {
-        var word1 = "";
-        var word2 = "";
-        while (word1 == word2 || (word1 == solution_word || word2 == solution_word)) {
-            word1 = this.getRandomChoice(this.state.ReserveList, WORD_COUNT);
-            word2 = this.getRandomChoice(this.state.ReserveList, WORD_COUNT);
-        }
-        return [word1, word2];
+    // create a list of words that will be displayed to the user
+    const getWordArray = () => {
+        var word1 = getRandomChoice(wordSet, initWordSetLength);
+        var word2 = getRandomChoice(wordSet, initWordSetLength);
+        var word3 = getRandomChoice(wordSet, initWordSetLength);
+
+        while (word1 == word2) word2 = getRandomChoice(wordSet, initWordSetLength);
+        
+        while (word1 == word3 || word2 == word3) word3 = getRandomChoice(wordSet, initWordSetLength);
+
+        return [word1, word2, word3];
+    }
+    
+    // choose a solution word from the Fry Sight Words list. 
+    const getSolutionWord = (wordArray) => {
+        var solutionWord = getRandomChoice(wordPool, wordPoolListLength);
+
+        // Choose a new word if the solution word is already in the word choices array
+        while (wordArray.includes(solutionWord)) solutionWord = getRandomChoice(wordPool, wordPoolListLength);
+
+        // remove the solution word from the pool of available solution words
+        wordPool = wordPool.filter(item => item !== solutionWord);
+        
+        setWordPoolListLength(wordPoolListLength-1);
+        return solutionWord;
     }
 
-    async getSolutionWord() {
-        const word = this.getRandomChoice(this.state.activeList, this.state.activeListLength);
+    // get a word choice array, choose a random index from it, and replace the element at that index with a solution word.
+    // this solution provides more distributed randomness
+    const createWordChoices = () => {
+        var wordChoices = getWordArray();
+        const correctWord = getSolutionWord(wordChoices);
+        var correctWordIndex = Crypto.getRandomBytes(1)[0] % DEFAULT_CHOICE_COUNT;
+        wordChoices[correctWordIndex] = correctWord;
 
-        var wordList = this.state.activeList;
-        wordList = wordList.filter(item => item !== word);
-        await this.setState({
-            currentWord: word,
-            activeList: wordList,
-            activeListLength: this.state.activeListLength - 1,
-        });
-        return word;
-    }
-
-    shuffleArray(array) {
-        for (var i = array.length - 1; i > 0; i--) {
-            var j = Math.floor(Math.random() * (i + 1));
-            var temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
-        }
-        return array;
-    }
-
-    filterList(lst, item) {
-        lst = lst.filter(val => val !== item);
-        return lst;
-    }
-
-    async createWordArray() {
-        const answer = await this.getSolutionWord();
-        const wrongWords = this.getIncorrectWords(answer);
-        const wordArr = [answer, wrongWords[0], wrongWords[1]];
-        const shuffledArray = this.shuffleArray(wordArr);
-        return shuffledArray
+        setWordOptions(wordChoices);
+        setSolutionWordIndex(correctWordIndex);
     } 
 
-    getButtonWord(lst, max) {
-        const word = this.getRandomChoice(lst, max);
-        return [this.filterList(lst, word), word];
-    }
-
-    async assignButtons() {
-        var lst = await this.createWordArray();
-
-        const val1 = lst[0];
-        const val2 = lst[1];
-        const val3 = lst[2];
-
-        await this.setState({
-            Option1: val1,
-            Option2: val2,
-            Option3: val3,
-        });
-    }
-
-    async compareChoice(buttonID) {
-        //this.refresh_state();
-        var correct = false;
+    // given a buttonID of a pressed word choice, determine the button with the answer and set the button colors accordingly
+    const onTouchablePress = (buttonID) => {
 
         // don't update buttons when user has already selected one
-        if (this.state.showNext) return;
-
-        if (this.state.Option1 === this.state.currentWord) {
-            await this.setState({
-                btn1State: 1,
-                btn2State: 2,
-                btn3State: 2,
-            });
-            if (buttonID == 1) {
-                correct = true;
-                correct_words.push(this.state.currentWord);
-            }        
-        }
-        else if (this.state.Option2 === this.state.currentWord) {
-            await this.setState({
-                btn1State: 2,
-                btn2State: 1,
-                btn3State: 2,
-            });
-            if (buttonID == 2) {
-                correct = true;
-                correct_words.push(this.state.currentWord);
-            }        
-        }
-        else if (this.state.Option3 === this.state.currentWord) {
-            await this.setState({
-                btn1State: 2,
-                btn2State: 2,
-                btn3State: 1,
-            });
-            if (buttonID == 3) {
-                correct = true;
-                correct_words.push(this.state.currentWord);
-            }        
-        }
-        if (!correct) incorrect_words.push(this.state.currentWord);
-
-        await this.childStateChange();
-        await this.setState({
-            showNext: true,
-            correct: correct,            
+        if (showResults) return;
+        
+        var btnStates = [...DEFAULT_BUTTON_STATES];
+        btnStates.forEach((state, index) => {
+            if (index == solutionWordIndex) btnStates[index] = 1;
+            else btnStates[index] = 2;
         });
-    }
+        setChoiceButtonStates(btnStates);
+        setShowResults(!showResults);
 
-    async refresh() {
-        await this.assignButtons();
-        await this.setState({
-            showNext: false,
-            correct: false,
-            btn1State: 0,
-            btn2State: 0,
-            btn3State: 0,
-            wordsRemaining: this.state.wordsRemaining-1,
-        });
-        await this.childStateChange();
-    }
-
-    _toggleResultText() {
-        if (this.state.showNext) {
-            if (this.state.correct) {
-                return (
-                    <View style={styles.choiceContainer}>
-                        <Text style={styles.resultText}>Well done!</Text> 
-                    </View>
-                );
-            }
-            else {
-                return (
-                    <View style={styles.choiceContainer}>
-                        <Text style={styles.resultText}>Incorrect!</Text> 
-                    </View>
-                );
-            }
+        // set "Well Done!" or "Incorrect!" and save performance data
+        if (buttonID == solutionWordIndex) {
+            setUserAnsweredCorrectly(!userAnsweredCorrectly);
+            correctWords.push(wordOptions[solutionWordIndex]);
         }
-    }
-    _toggleResultButton() {
-        if (this.state.showNext) {
-            if (this.state.activeListLength < 1) {
-                return (
-                    <View style={styles.choiceContainer}>
-                        <TouchableOpacity 
-                            style={styles.resultTouchable}
-                            onPress={this.switchToResults}
-                        >
-                            <Text style={styles.text}>Next</Text>
-                        </TouchableOpacity>
-                    </View>
-                );
-            }
-            else {
-                return (
-                    <View style={styles.navContainer}>
-                        <TouchableOpacity 
-                            style={styles.resultTouchable}
-                            onPress={this.refresh}
-                        >
-                            <Text style={styles.text}>Next</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            style={styles.dangerTouchable}
-                            onPress={this.switchToResults}
-                        >
-                            <Text style={styles.dangerText}>Exit</Text>
-                        </TouchableOpacity>
-                    </View>
-                );
-            }
-        }
+        else incorrectWords.push(wordOptions[solutionWordIndex]);
     }
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <View style={styles.counterView}>
-                    <Text style={styles.progressCounter}>Words remaining: {this.state.wordsRemaining}</Text>
-                </View>
-                {this._toggleResultText()}
-                <View style={styles.speakButton}>
-                    <TouchableOpacity style={styles.speakTouchable} onPress={this.speak}>
-                        <Text style={styles.text}>Speak</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.choiceContainer}>
-                    <ChoiceBtn 
-                        _id={1}
-                        comp={this.compareChoice}
-                        pnState={this.state}
-                        onRef={ref => (this.btn1=ref)}
-                    />
-                    <ChoiceBtn 
-                        _id={2}
-                        comp={this.compareChoice}
-                        pnState={this.state}
-                        onRef={ref => (this.btn2=ref)}
-                    />
-                </View>
-                <View style={styles.choiceContainer}>
-                    <ChoiceBtn 
-                        _id={3}
-                        comp={this.compareChoice}
-                        pnState={this.state}
-                        onRef={ref => (this.btn3=ref)}
-                    />
-                </View>
-                {this._toggleResultButton()}
+    // set button color based on the state saved for a buttonID
+    const _getTouchableColor = (btnID) => {
+        if (choiceButtonStates[btnID] == 0) return styles.guessTouchableNormal
+        else if (choiceButtonStates[btnID] == 1) return styles.guessTouchableGreen;
+        else if (choiceButtonStates[btnID] == 2) return styles.guessTouchableRed;
+    }
+
+    // control behavior of next button press. Only when all 100 words are exhausted should the next button toggle the results screen
+    const _toggleResultsPress = () => {
+        if (wordPoolListLength > 0) return reset;
+        else return switchToResults;
+    }
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.counterView}>
+                <Text style={styles.progressCounter}>Words remaining: {wordPoolListLength}</Text>
             </View>
-        );
-    }
+            <View style={styles.choiceContainer}>
+                {showResults && ((userAnsweredCorrectly && <Text style={styles.resultText}>Well Done!</Text>) || 
+                    <Text style={styles.resultText}>Incorrect!</Text> )}
+            </View>
+            <View style={styles.speakButton}>
+                <TouchableOpacity style={styles.speakTouchable} onPress={speak}>
+                    <Text style={styles.text}>Speak</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.choiceContainer}>
+                <TouchableOpacity 
+                    style={_getTouchableColor(0)}
+                    onPress={() => onTouchablePress(0)}
+                >
+                    <Text style={styles.opacityText}>{wordOptions[0]}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    style={_getTouchableColor(1)}
+                    onPress={() => onTouchablePress(1)}
+                >
+                    <Text style={styles.opacityText}>{wordOptions[1]}</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.choiceContainer}>
+                <TouchableOpacity 
+                    style={_getTouchableColor(2)}
+                    onPress={() => onTouchablePress(2)}
+                >
+                    <Text style={styles.opacityText}>{wordOptions[2]}</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.navContainer}>
+                {showResults && 
+                <TouchableOpacity 
+                        style={styles.resultTouchable}
+                        onPress={_toggleResultsPress()}
+                    >
+                        <Text style={styles.text}>Next</Text>
+                    </TouchableOpacity>
+                }
+                {showResults &&
+                    <TouchableOpacity 
+                        style={styles.dangerTouchable}
+                        onPress={switchToResults}
+                    >
+                        <Text style={styles.dangerText}>Exit</Text>
+                    </TouchableOpacity>
+                }
+            </View>
+        </View>
+    );
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -388,4 +286,43 @@ const styles = StyleSheet.create({
         lineHeight: 50,
         fontWeight: 'bold',
     },
+    guessTouchableNormal: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        height: 65,
+        maxWidth: 185,
+        borderRadius: 20,
+        backgroundColor: "black",
+        margin: 15,
+    },
+    guessTouchableRed: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        height: 65,
+        maxWidth: 185,
+        borderRadius: 20,
+        backgroundColor: "red",
+        margin: 15,
+    },
+    guessTouchableGreen: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        height: 65,
+        maxWidth: 185,
+        borderRadius: 20,
+        backgroundColor: "green",
+        margin: 15,
+    },
+    opacityText: {
+        color: "white",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 32,
+        lineHeight: 40,
+        fontWeight: 'bold',
+    }
 })
+export default Game;

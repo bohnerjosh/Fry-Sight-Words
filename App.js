@@ -13,7 +13,7 @@ LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const Stack = createNativeStackNavigator();
 
-function App() {
+const App = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{headerShown: false}}>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {useState} from 'react';
 import {
     StyleSheet, 
     Button,
@@ -7,6 +7,8 @@ import {
     TouchableOpacity,
 } from "react-native";
 import Slider from '@react-native-community/slider';
+
+// import Word Lists
 import { FryList100 } from "../components/set100";
 import { FryList200 } from "../components/set200";
 import { FryList300 } from "../components/set300";
@@ -18,8 +20,13 @@ import { FryList800 } from "../components/set800";
 import { FryList900 } from "../components/set900";
 import { FryList1000 } from "../components/set1000";
 import { SelectList } from 'react-native-dropdown-select-list';
-const DEFAULT_SPEECH_RATE = 0.5;
 
+// default Variables
+const DEFAULT_SPEECH_RATE = 0.5;
+var wordSetSelected = FryList100; 
+const GAME_SCREEN_NAME = "Game";
+
+// struct for dropdown select
 const selectData = [
     {key: FryList100, value: "Set 100"},
     {key: FryList200, value: "Set 200"},
@@ -34,73 +41,57 @@ const selectData = [
 
 ]
 
-var wordSetSelected = FryList100;
+const MainScreen = ({navigation}) => {
 
-export default class MainScreen extends Component {
-    constructor(props) {
-        super(props);
-        this.switchScreen = this.switchScreen.bind(this);
-        this.updateRate = this.updateRate.bind(this);
+    const [speechRate, setSpeechRate] = useState(DEFAULT_SPEECH_RATE);
 
-        this.state = {
-            speech_rate: DEFAULT_SPEECH_RATE,
-            selectVal: wordSetSelected,
-        }
-    }
-
-    switchScreen() {
-        this.props.navigation.navigate("Game", {
-            SPEECH_RATE: this.state.speech_rate,
+    // switch to the game screen
+    const switchScreen = () => {
+        navigation.navigate(GAME_SCREEN_NAME, {
+            SPEECH_RATE: speechRate,
             wordSet: wordSetSelected,                                    
         });
     }
-    updateRate(rate) {
-        this.setState({
-            speech_rate: rate,
-        });
-    }
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <View style={styles.titleView}>
-                    <Text style={styles.titleText}>Fry Sight Words</Text>
-                </View>
-                <View>
-                    <Text style={styles.wordOptionsText}>Word Sets</Text>
-                    <View style={styles.selector}>
-                        <SelectList 
-                            setSelected={(key) => wordSetSelected = key}
-                            data={selectData}
-                            save="key"
-                            defaultOption={selectData[0]}
-                            width={5}
-                        />
-                    </View>
-                   
-                    <TouchableOpacity
-                        style={styles.navTouchable}
-                        onPress={this.switchScreen} 
-                    >
-                        <Text style={styles.text}>Start</Text>
-                    </TouchableOpacity>
-                    <View style={styles.setting}>
-                        <Text style={styles.speechSpeedTitle}>Speech Speed</Text>
-                        <Text style={styles.speechSpeedValue}>{this.state.speech_rate}</Text>
-                        <Slider 
-                            style={styles.slider}
-                            minimumValue={0}
-                            maximumValue={1}
-                            onValueChange={this.updateRate}
-                            value={DEFAULT_SPEECH_RATE}
-                            minimumTrackTintColor="#FFFFFF"
-                            maximumTrackTintColor="#000000"
-                        />
-                </View>
-                </View>
+    return (
+        <View style={styles.container}>
+            <View style={styles.titleView}>
+                <Text style={styles.titleText}>Fry Sight Words</Text>
             </View>
-        );
-    }
+            <View>
+                <Text style={styles.wordOptionsText}>Word Sets</Text>
+                <View style={styles.selector}>
+                    <SelectList 
+                        setSelected={(key) => wordSetSelected = key}
+                        data={selectData}
+                        save="key"
+                        defaultOption={selectData[0]}
+                        width={5}
+                    />
+                </View>
+                
+                <TouchableOpacity
+                    style={styles.navTouchable}
+                    onPress={switchScreen} 
+                >
+                    <Text style={styles.text}>Start</Text>
+                </TouchableOpacity>
+                <View style={styles.setting}>
+                    <Text style={styles.speechSpeedTitle}>Speech Speed</Text>
+                    <Text style={styles.speechSpeedValue}>{speechRate}</Text>
+                    <Slider 
+                        style={styles.slider}
+                        minimumValue={0}
+                        maximumValue={1}
+                        onValueChange={setSpeechRate}
+                        value={DEFAULT_SPEECH_RATE}
+                        minimumTrackTintColor="#FFFFFF"
+                        maximumTrackTintColor="#000000"
+                    />
+            </View>
+            </View>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -188,3 +179,4 @@ const styles = StyleSheet.create({
     }
 
 });
+export default MainScreen;
