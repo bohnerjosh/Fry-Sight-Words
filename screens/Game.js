@@ -10,11 +10,12 @@ import {
     TouchableOpacity,
 } from "react-native";
 
-// default consts
-const DEFAULT_WORD_OPTIONS = ["", "", ""];
-const DEFAULT_BUTTON_STATES = [0, 0, 0]; // 0 for normal, 1 for correct, 2 for incorrect
+import GuessTouchable from '../components/GuessTouchable';
+
 const RESULTS_SCREEN_NAME = "Results";
-const DEFAULT_CHOICE_COUNT = 3; 
+
+var DEFAULT_WORD_OPTIONS = [];
+var DEFAULT_BUTTON_STATES = []; // 0 for normal, 1 for correct, 2 for incorrect
 
 // store user performance data for display in results
 var correctWords = [];
@@ -22,28 +23,38 @@ var incorrectWords = [];
 
 const Game = ({navigation, route}) => {
 
-    // extract params
-    const SPEECH_RATE = route.params.SPEECH_RATE;
-    const wordSet = route.params.wordSet;
-
-    // initialize wordset
-    const initWordSetLength = wordSet.length;
-    var wordPool = wordSet;
-
     // State variables
-    const [wordPoolListLength, setWordPoolListLength] = useState(initWordSetLength);
-    const [wordOptions, setWordOptions] = useState(DEFAULT_WORD_OPTIONS);
-    const [choiceButtonStates, setChoiceButtonStates] = useState([...DEFAULT_BUTTON_STATES]);
+    const [wordPoolListLength, setWordPoolListLength] = useState(route.params.wordSet.length);
+    const [wordSetListLength, setWordSetListLength] = useState(route.params.wordSet.length);
+    const [speechRate, setSpeechRate] = useState(route.params.SPEECH_RATE);
+    const [fieldLength, setFieldLength] = useState(route.params.FIELD_LENGTH);
+    const [wordOptions, setWordOptions] = useState([]);
+    const [wordSet, setWordSet] = useState([...route.params.wordSet]);
+    const [wordPool, setWordPool] = useState([...route.params.wordSet]);
+    const [choiceButtonStates, setChoiceButtonStates] = useState([]);
     const [showResults, setShowResults] = useState(false); // for toggling "well Done!" or "Incorrect!" text
     const [userAnsweredCorrectly, setUserAnsweredCorrectly] = useState(false); // determines whether to show "Well Done!" or "Incorrect!"
     const [solutionWordIndex, setSolutionWordIndex] = useState(-1);
 
     // reset user performance and set word choices for first render
-    useEffect(() => {
+    useEffect(() => {        
+        // extract params
+
+        for (var i=0; i<fieldLength; i++) {
+            DEFAULT_WORD_OPTIONS.push("");
+        }
+        for (var i=0; i<fieldLength; i++) {
+            DEFAULT_BUTTON_STATES.push(0);
+        }
+
+        setChoiceButtonStates([...DEFAULT_BUTTON_STATES]);
+
         correctWords = [];
         incorrectWords = [];
+        
         createWordChoices();
-    }, []);
+
+    }, [route.params]);
 
     // change state back to default: clear button colors, next buttons are hidden, create new word choices
     const reset = () => {
@@ -63,7 +74,7 @@ const Game = ({navigation, route}) => {
 
     // use TTS to have user audibly hear what word they should press
     const speak = () => {
-        Speech.speak(wordOptions[solutionWordIndex], {rate: SPEECH_RATE});
+        Speech.speak(wordOptions[solutionWordIndex], {rate: speechRate});
     }
 
     // given a list and index terminator, get a random element from that list
@@ -73,15 +84,21 @@ const Game = ({navigation, route}) => {
 
     // create a list of words that will be displayed to the user
     const getWordArray = () => {
-        var word1 = getRandomChoice(wordSet, initWordSetLength);
-        var word2 = getRandomChoice(wordSet, initWordSetLength);
-        var word3 = getRandomChoice(wordSet, initWordSetLength);
-
-        while (word1 == word2) word2 = getRandomChoice(wordSet, initWordSetLength);
-        
-        while (word1 == word3 || word2 == word3) word3 = getRandomChoice(wordSet, initWordSetLength);
-
-        return [word1, word2, word3];
+        var wordMap = {};
+        var newWordArray = [];
+        for (var index=0; index<fieldLength; index++) {
+            while (true) {
+                var letter = getRandomChoice(wordSet, wordSetListLength);
+                if (wordMap[letter] == undefined) {
+                    wordMap[letter] = index; 
+                    break;
+                }
+            }
+        };
+        for (const [letter, index] of Object.entries(wordMap)) {
+            newWordArray[index] = letter;
+        }
+        return newWordArray;
     }
     
     // choose a solution word from the Fry Sight Words list. 
@@ -92,7 +109,8 @@ const Game = ({navigation, route}) => {
         while (wordArray.includes(solutionWord)) solutionWord = getRandomChoice(wordPool, wordPoolListLength);
 
         // remove the solution word from the pool of available solution words
-        wordPool = wordPool.filter(item => item !== solutionWord);
+        const newWordPool = wordPool.filter(item => item !== solutionWord);
+        setWordPool(newWordPool);
         
         setWordPoolListLength(wordPoolListLength-1);
         return solutionWord;
@@ -103,9 +121,9 @@ const Game = ({navigation, route}) => {
     const createWordChoices = () => {
         var wordChoices = getWordArray();
         const correctWord = getSolutionWord(wordChoices);
-        var correctWordIndex = Crypto.getRandomBytes(1)[0] % DEFAULT_CHOICE_COUNT;
+        //console.log("fieldlength", fieldLength);
+        var correctWordIndex = Crypto.getRandomBytes(1)[0] % fieldLength;
         wordChoices[correctWordIndex] = correctWord;
-
         setWordOptions(wordChoices);
         setSolutionWordIndex(correctWordIndex);
     } 
@@ -125,6 +143,7 @@ const Game = ({navigation, route}) => {
         setShowResults(!showResults);
 
         // set "Well Done!" or "Incorrect!" and save performance data
+
         if (buttonID == solutionWordIndex) {
             setUserAnsweredCorrectly(!userAnsweredCorrectly);
             correctWords.push(wordOptions[solutionWordIndex]);
@@ -145,6 +164,39 @@ const Game = ({navigation, route}) => {
         else return switchToResults;
     }
 
+    const _buttonRender = () => {
+        var renderedButtons = [];
+        var j = 0;
+        
+        for (var i=0; i<fieldLength/2; i++) {
+            renderedButtons.push(
+                <View style={styles.choiceContainer} key={i}>
+                    
+                    <GuessTouchable 
+                        onPress={onTouchablePress}
+                        buttonID={j}
+                        getStyle={_getTouchableColor}
+                        word={wordOptions[j]}
+                        key={j}
+                    />
+                    
+                    {
+                        wordOptions[j+1] !== undefined &&
+                        <GuessTouchable 
+                            onPress={onTouchablePress}
+                            buttonID={j+1}
+                            getStyle={_getTouchableColor}
+                            word={wordOptions[j+1]}
+                            key={j+1}
+                        />
+                    }
+                </View>
+            ); 
+            j += 2;
+        }
+        return renderedButtons;       
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.counterView}>
@@ -159,28 +211,8 @@ const Game = ({navigation, route}) => {
                     <Text style={styles.text}>Speak</Text>
                 </TouchableOpacity>
             </View>
-            <View style={styles.choiceContainer}>
-                <TouchableOpacity 
-                    style={_getTouchableColor(0)}
-                    onPress={() => onTouchablePress(0)}
-                >
-                    <Text style={styles.opacityText}>{wordOptions[0]}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                    style={_getTouchableColor(1)}
-                    onPress={() => onTouchablePress(1)}
-                >
-                    <Text style={styles.opacityText}>{wordOptions[1]}</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.choiceContainer}>
-                <TouchableOpacity 
-                    style={_getTouchableColor(2)}
-                    onPress={() => onTouchablePress(2)}
-                >
-                    <Text style={styles.opacityText}>{wordOptions[2]}</Text>
-                </TouchableOpacity>
-            </View>
+            {_buttonRender()}
+
             <View style={styles.navContainer}>
                 {showResults && 
                 <TouchableOpacity 

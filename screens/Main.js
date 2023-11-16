@@ -23,8 +23,8 @@ import { SelectList } from 'react-native-dropdown-select-list';
 
 // default Variables
 const DEFAULT_SPEECH_RATE = 0.5;
-var wordSetSelected = FryList100; 
 const GAME_SCREEN_NAME = "Game";
+const DEFAULT_FIELD_LENGTH = 3;
 
 // struct for dropdown select
 const selectData = [
@@ -44,12 +44,15 @@ const selectData = [
 const MainScreen = ({navigation}) => {
 
     const [speechRate, setSpeechRate] = useState(DEFAULT_SPEECH_RATE);
+    const [fieldLength, setFieldLength] = useState(DEFAULT_FIELD_LENGTH);
+    const [wordSetSelected, setWordSetSelected] = useState(FryList100);
 
     // switch to the game screen
     const switchScreen = () => {
         navigation.navigate(GAME_SCREEN_NAME, {
             SPEECH_RATE: speechRate,
-            wordSet: wordSetSelected,                                    
+            wordSet: wordSetSelected,
+            FIELD_LENGTH: fieldLength                                    
         });
     }
 
@@ -62,7 +65,7 @@ const MainScreen = ({navigation}) => {
                 <Text style={styles.wordOptionsText}>Word Sets</Text>
                 <View style={styles.selector}>
                     <SelectList 
-                        setSelected={(key) => wordSetSelected = key}
+                        setSelected={(key) => setWordSetSelected(key)}
                         data={selectData}
                         save="key"
                         defaultOption={selectData[0]}
@@ -77,8 +80,20 @@ const MainScreen = ({navigation}) => {
                     <Text style={styles.text}>Start</Text>
                 </TouchableOpacity>
                 <View style={styles.setting}>
-                    <Text style={styles.speechSpeedTitle}>Speech Speed</Text>
-                    <Text style={styles.speechSpeedValue}>{speechRate}</Text>
+                    <Text style={styles.optionsTitle}>Number of Choices per Letter</Text>
+                    <Text style={styles.optionsValue}>{fieldLength}</Text>
+                    <Slider 
+                        style={styles.slider}
+                        minimumValue={2}
+                        maximumValue={6}
+                        onValueChange={setFieldLength}
+                        value={fieldLength}
+                        minimumTrackTintColor="#FFFFFF"
+                        maximumTrackTintColor="#000000"
+                        step={1}
+                    />
+                    <Text style={styles.optionsTitle}>Speech Speed</Text>
+                    <Text style={styles.optionsValue}>{speechRate}</Text>
                     <Slider 
                         style={styles.slider}
                         minimumValue={0}
@@ -159,8 +174,9 @@ const styles = StyleSheet.create({
     slider: {
         width: 200, 
         height: 40,
+        alignSelf: "center"
     },
-    speechSpeedTitle: {
+    optionsTitle: {
         color: "black",
         alignItems: "center",
         justifyContent: "center",
@@ -169,7 +185,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: "center",
     },
-    speechSpeedValue: {
+    optionsValue: {
         color: "black",
         alignItems: "center",
         justifyContent: "center",
