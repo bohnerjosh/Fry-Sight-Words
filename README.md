@@ -9,11 +9,12 @@ This App's purpose is to help teachers and parents quiz their children on Fry's 
 My app runs via React Native with Expo with the following dependencies:
 
 NodeJS: v16 LTS
+
 expo-cli: ``6.0.8``
 
 # Installation
 
-Clone the repository.
+Clone the repository
 
 ```git clone https://github.com/bohnerjosh/Fry-Sight-Words```
 
