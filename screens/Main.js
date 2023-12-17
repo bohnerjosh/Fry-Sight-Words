@@ -80,7 +80,7 @@ const MainScreen = ({navigation}) => {
                     <Text style={styles.text}>Start</Text>
                 </TouchableOpacity>
                 <View style={styles.setting}>
-                    <Text style={styles.optionsTitle}>Number of Choices per Letter</Text>
+                    <Text style={styles.optionsTitle}>Number of Choices per Word</Text>
                     <Text style={styles.optionsValue}>{fieldLength}</Text>
                     <Slider 
                         style={styles.slider}
