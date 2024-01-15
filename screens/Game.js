@@ -83,30 +83,27 @@ const Game = ({navigation, route}) => {
     }
 
     // create a list of words that will be displayed to the user
-    const getWordArray = () => {
+    const getWordArray = (solutionWord) => {
         var wordMap = {};
         var newWordArray = [];
         for (var index=0; index<fieldLength; index++) {
             while (true) {
-                var letter = getRandomChoice(wordSet, wordSetListLength);
-                if (wordMap[letter] == undefined) {
-                    wordMap[letter] = index; 
+                var word = getRandomChoice(wordSet, wordSetListLength);
+                if (wordMap[word] == undefined && word !== solutionWord) {
+                    wordMap[word] = index; 
                     break;
                 }
             }
         };
-        for (const [letter, index] of Object.entries(wordMap)) {
-            newWordArray[index] = letter;
+        for (const [word, index] of Object.entries(wordMap)) {
+            newWordArray[index] = word;
         }
         return newWordArray;
     }
     
     // choose a solution word from the Fry Sight Words list. 
-    const getSolutionWord = (wordArray) => {
+    const getSolutionWord = () => {
         var solutionWord = getRandomChoice(wordPool, wordPoolListLength);
-
-        // Choose a new word if the solution word is already in the word choices array
-        while (wordArray.includes(solutionWord)) solutionWord = getRandomChoice(wordPool, wordPoolListLength);
 
         // remove the solution word from the pool of available solution words
         const newWordPool = wordPool.filter(item => item !== solutionWord);
@@ -119,8 +116,9 @@ const Game = ({navigation, route}) => {
     // get a word choice array, choose a random index from it, and replace the element at that index with a solution word.
     // this solution provides more distributed randomness
     const createWordChoices = () => {
-        var wordChoices = getWordArray();
-        const correctWord = getSolutionWord(wordChoices);
+        const correctWord = getSolutionWord();
+        var wordChoices = getWordArray(correctWord);
+        
         //console.log("fieldlength", fieldLength);
         var correctWordIndex = Crypto.getRandomBytes(1)[0] % fieldLength;
         wordChoices[correctWordIndex] = correctWord;
