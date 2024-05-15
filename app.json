@@ -2,7 +2,7 @@
   "expo": {
     "name": "frywords",
     "slug": "frywords",
-    "version": "1.0.0",
+    "version": "3.0.0",
     "orientation": "portrait",
     "icon": "./assets/complete-img.png",
     "userInterfaceStyle": "light",
@@ -20,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.bohnjos.frywords",
-      "buildNumber": "9"
+      "buildNumber": "11"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +28,7 @@
         "backgroundImage": "./assets/background.png"
       },
       "package": "com.bohnjos.frywords",
-      "versionCode": 19
+      "versionCode": 20
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -48,7 +48,7 @@
             "buildToolsVersion": "34.0.0"
           },
           "ios": {
-            "deploymentTarget": "17.0"
+            "deploymentTarget": "17.4"
           }
         }
       ]

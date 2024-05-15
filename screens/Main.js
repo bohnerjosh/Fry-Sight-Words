@@ -6,6 +6,7 @@ import {
     View,
     TouchableOpacity,
 } from "react-native";
+import Toast from 'react-native-root-toast';
 import Slider from '@react-native-community/slider';
 
 // import Word Lists
@@ -25,6 +26,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 const DEFAULT_SPEECH_RATE = 0.5;
 const GAME_SCREEN_NAME = "Game";
 const DEFAULT_FIELD_LENGTH = 3;
+const DEFAULT_WORD_LENGTH = 0;
 
 // struct for dropdown select
 const selectData = [
@@ -46,13 +48,20 @@ const MainScreen = ({navigation}) => {
     const [speechRate, setSpeechRate] = useState(DEFAULT_SPEECH_RATE);
     const [fieldLength, setFieldLength] = useState(DEFAULT_FIELD_LENGTH);
     const [wordSetSelected, setWordSetSelected] = useState(FryList100);
+    const [allowedWordLength, setAllowedWordLength] = useState(DEFAULT_WORD_LENGTH);
 
     // switch to the game screen
     const switchScreen = () => {
+        const parsedWordSet = allowedWordLength !== 0 ? [...wordSetSelected].filter((word) => word.length == allowedWordLength) : [...wordSetSelected];
+        if (parsedWordSet.length == 0) {
+            let toast = Toast.show("No words in this set match the word length chosen", {duration: Toast.durations.LONG});
+            return;
+        }
         navigation.navigate(GAME_SCREEN_NAME, {
             SPEECH_RATE: speechRate,
-            wordSet: wordSetSelected,
-            FIELD_LENGTH: fieldLength                                    
+            wordSet: parsedWordSet,
+            FIELD_LENGTH: fieldLength,
+            allowedWordLength: allowedWordLength                                    
         });
     }
 
@@ -92,6 +101,18 @@ const MainScreen = ({navigation}) => {
                         maximumTrackTintColor="#000000"
                         step={1}
                     />
+                    <Text style={styles.optionsTitle}>Word Length</Text>
+                    <Text style={styles.optionsValue}>{allowedWordLength == 0 ? "Disabled" : allowedWordLength}</Text>
+                    <Slider 
+                        style={styles.slider}
+                        minimumValue={0}
+                        maximumValue={10}
+                        step={1}
+                        onValueChange={setAllowedWordLength}
+                        value={DEFAULT_WORD_LENGTH}
+                        minimumTrackTintColor="#FFFFFF"
+                        maximumTrackTintColor="#000000"
+                    />
                     <Text style={styles.optionsTitle}>Speech Speed</Text>
                     <Text style={styles.optionsValue}>{speechRate}</Text>
                     <Slider 
@@ -102,7 +123,7 @@ const MainScreen = ({navigation}) => {
                         value={DEFAULT_SPEECH_RATE}
                         minimumTrackTintColor="#FFFFFF"
                         maximumTrackTintColor="#000000"
-                    />
+                    /> 
             </View>
             </View>
         </View>

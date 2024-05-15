@@ -24,13 +24,14 @@ var incorrectWords = [];
 const Game = ({navigation, route}) => {
 
     // State variables
-    const [wordPoolListLength, setWordPoolListLength] = useState(route.params.wordSet.length);
-    const [wordSetListLength, setWordSetListLength] = useState(route.params.wordSet.length);
+    const [wordSet, setWordSet] = useState(route.params.wordSet);
+    const [wordPool, setWordPool] = useState([...wordSet]);
+
+    const [wordPoolListLength, setWordPoolListLength] = useState(wordSet.length);
+    const [wordSetListLength, setWordSetListLength] = useState(wordSet.length);
     const [speechRate, setSpeechRate] = useState(route.params.SPEECH_RATE);
     const [fieldLength, setFieldLength] = useState(route.params.FIELD_LENGTH);
     const [wordOptions, setWordOptions] = useState([]);
-    const [wordSet, setWordSet] = useState([...route.params.wordSet]);
-    const [wordPool, setWordPool] = useState([...route.params.wordSet]);
     const [choiceButtonStates, setChoiceButtonStates] = useState([]);
     const [showResults, setShowResults] = useState(false); // for toggling "well Done!" or "Incorrect!" text
     const [userAnsweredCorrectly, setUserAnsweredCorrectly] = useState(false); // determines whether to show "Well Done!" or "Incorrect!"
@@ -39,6 +40,7 @@ const Game = ({navigation, route}) => {
     // reset user performance and set word choices for first render
     useEffect(() => {        
         // extract params
+        if (wordPool.length == 0) 
 
         for (var i=0; i<fieldLength; i++) {
             DEFAULT_WORD_OPTIONS.push("");
@@ -54,7 +56,7 @@ const Game = ({navigation, route}) => {
         
         createWordChoices();
 
-    }, [route.params]);
+    }, []);
 
     // change state back to default: clear button colors, next buttons are hidden, create new word choices
     const reset = () => {
